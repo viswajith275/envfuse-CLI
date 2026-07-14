@@ -2,8 +2,8 @@
 set -e
 
 # Configuration (defaults, can be overridden by flags below)
-REPO="viswajith275/envfuse-cli"
-BIN_NAME="envfuse"
+REPO="viswajith275/envseal-cli"
+BIN_NAME="envseal"
 INSTALL_DIR="$HOME/.local/bin"
 VERSION="latest"      # a specific tag, e.g. "v1.2.3", or "latest"
 LOCAL_FILE=""          # path to a local tarball or raw binary, for manual/offline installs
