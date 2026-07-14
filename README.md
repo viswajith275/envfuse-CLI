@@ -45,14 +45,14 @@ Developers often struggle with securely managing API keys, tokens, and sensitive
 
 ## Features
 
-- 🔐 **End-to-End Encryption**: Secrets encrypted with AES-256-GCM
-- 🔑 **Master Password Protection**: Single master password protects all secrets
-- 📦 **Lightweight Binary**: Single compiled executable, no dependencies required
-- ⚡ **Fast**: Written in Rust for blazing-fast performance
-- 🛡️ **Memory Safe**: Automatic memory wiping prevents sensitive data leaks
-- 🔄 **Shell Integration**: Load secrets directly into your bash/zsh environment
-- 🗂️ **Simple CLI**: Intuitive commands for managing secrets
-- 📍 **OS-Aware Storage**: Vault stored in standard config directory for your OS
+-  **End-to-End Encryption**: Secrets encrypted with AES-256-GCM
+-  **Master Password Protection**: Single master password protects all secrets
+-  **Lightweight Binary**: Single compiled executable, no dependencies required
+-  **Fast**: Written in Rust for blazing-fast performance
+-  **Memory Safe**: Automatic memory wiping prevents sensitive data leaks
+-  **Shell Integration**: Load secrets directly into your bash/zsh environment
+-  **Simple CLI**: Intuitive commands for managing secrets
+-  **OS-Aware Storage**: Vault stored in standard config directory for your OS
 
 ---
 
