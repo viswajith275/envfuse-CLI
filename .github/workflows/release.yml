@@ -42,7 +42,7 @@ jobs:
         
       - name: Rename and compress
         run: |
-          mv target/${{ matrix.target }}/release/envfuse envseal-${{ matrix.name }}
+          mv target/${{ matrix.target }}/release/envseal envseal-${{ matrix.name }}
           tar -czvf envseal-${{ matrix.name }}.tar.gz envseal-${{ matrix.name }}
           
       - name: Release
