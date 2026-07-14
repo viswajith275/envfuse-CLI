@@ -1,7 +1,7 @@
 use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
-#[command(name = "envfuse", about = "Encrypted local API key manager")]
+#[command(name = "envseal", about = "Encrypted local API key manager")]
 pub struct Cli {
     #[command(subcommand)]
     pub command: Commands,

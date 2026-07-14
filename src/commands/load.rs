@@ -8,7 +8,7 @@ pub fn cmd_load(keys: &[String]) -> Result<()> {
     let password = Zeroizing::new(prompt_password("Master Password: ")?);
     let derived = vault.unlock(&password)?;
     
-    eprintln!("Loading environment variables...");
+    eprintln!("loading environment variables...");
     for key in keys {
         let value = vault.get_entry(&derived, key).with_context(|| format!("failed to read '{key}'"))?;
         println!("export {key}={value}");

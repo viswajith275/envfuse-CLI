@@ -1,7 +1,6 @@
 use super::crypto;
 use anyhow::{Ok, Result, anyhow};
 use base64::Engine;
-use clap::builder::Str;
 use directories::ProjectDirs;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -9,7 +8,7 @@ use std::fs;
 use std::path::PathBuf;
 use zeroize::Zeroizing;
 
-const CANARY_PLAINTEXT: &str = "envfuse-Encrypted";
+const CANARY_PLAINTEXT: &str = "envseal-Encrypted";
 
 #[derive(Serialize, Deserialize)]
 struct Entry {
@@ -28,9 +27,9 @@ impl Vault {
     // find config/data directories acording t os
     pub fn path() -> Result<PathBuf> {
 
-        let dirs = ProjectDirs::from("dev", "envfuse", "envfuse").ok_or_else(|| anyhow!("could not determine a config directory for this OS"))?;
+        let dirs = ProjectDirs::from("dev", "envseal", "envseal").ok_or_else(|| anyhow!("could not determine a config directory for this OS"))?;
         
-        Ok(dirs.config_dir().join("vault-encrypted.json"))
+        Ok(dirs.config_dir().join("seal-encrypted.json"))
     }
 
     // check if it directory already exists or not
@@ -58,7 +57,7 @@ impl Vault {
      pub fn load() -> Result<Self> {
 
         let path = Self::path()?;
-        let data = fs::read_to_string(&path).map_err(|_| anyhow!("no vault found — run `envfuse init` first"))?;
+        let data = fs::read_to_string(&path).map_err(|_| anyhow!("no Seal found — run `envseal init` first"))?;
         Ok(serde_json::from_str(&data)?)
 
     }
@@ -81,10 +80,10 @@ impl Vault {
  
         let nonce = b64_decode(&self.canary.nonce)?;
         let ciphertext = b64_decode(&self.canary.ciphertext)?;
-        let plaintext = crypto::decrypt(&key, &nonce, &ciphertext).map_err(|_| anyhow!("wrong master password"))?;
+        let plaintext = crypto::decrypt(&key, &nonce, &ciphertext).map_err(|_| anyhow!("wrong Master Password!"))?;
  
         if plaintext != CANARY_PLAINTEXT {
-            return Err(anyhow!("wrong master password"));
+            return Err(anyhow!("wrong Master Password!"));
         }
         Ok(key)
     }

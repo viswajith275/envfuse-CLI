@@ -309,7 +309,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "envfuse"
+name = "envseal"
 version = "0.1.0"
 dependencies = [
  "aead",

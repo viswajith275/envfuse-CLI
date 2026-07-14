@@ -8,26 +8,25 @@ pub fn cmd_init() -> Result<()> {
         anyhow::bail!("vault already exists at {}", Vault::path()?.display());
     }
 
-    eprintln!("\n{}\n", r#"                                 /$$$$$$                              
-                                /$$__  $$                             
-  /$$$$$$  /$$$$$$$  /$$    /$$| $$  \__//$$   /$$  /$$$$$$$  /$$$$$$ 
- /$$__  $$| $$__  $$|  $$  /$$/| $$$$   | $$  | $$ /$$_____/ /$$__  $$
-| $$$$$$$$| $$  \ $$ \  $$/$$/ | $$_/   | $$  | $$|  $$$$$$ | $$$$$$$$
-| $$_____/| $$  | $$  \  $$$/  | $$     | $$  | $$ \____  $$| $$_____/
-|  $$$$$$$| $$  | $$   \  $/   | $$     |  $$$$$$/ /$$$$$$$/|  $$$$$$$
- \_______/|__/  |__/    \_/    |__/      \______/ |_______/  \_______/
-                                                                      
-                                                                      
-                                                                      "#
+    eprintln!("\n{}\n", r#" /$$$$$$$$                       /$$$$$$                      /$$
+| $$_____/                      /$$__  $$                    | $$
+| $$       /$$$$$$$  /$$    /$$| $$  \__/  /$$$$$$   /$$$$$$ | $$
+| $$$$$   | $$__  $$|  $$  /$$/|  $$$$$$  /$$__  $$ |____  $$| $$
+| $$__/   | $$  \ $$ \  $$/$$/  \____  $$| $$$$$$$$  /$$$$$$$| $$
+| $$      | $$  | $$  \  $$$/   /$$  \ $$| $$_____/ /$$__  $$| $$
+| $$$$$$$$| $$  | $$   \  $/   |  $$$$$$/|  $$$$$$$|  $$$$$$$| $$
+|________/|__/  |__/    \_/     \______/  \_______/ \_______/|__/
+                                                                 
+                                                                   "#
             );
  
-    let password = Zeroizing::new(prompt_password("Set a master password: ")?);
-    let confirm = Zeroizing::new(prompt_password("Confirm master password: ")?);
+    let password = Zeroizing::new(prompt_password("Set a Master Password: ")?);
+    let confirm = Zeroizing::new(prompt_password("Confirm Master Password: ")?);
     if *password != *confirm {
         anyhow::bail!("passwords did not match");
     }
     
     Vault::init(&password)?;
-    eprintln!("Vault created at {}", Vault::path()?.display());
+    eprintln!("Seal created at {}", Vault::path()?.display());
     Ok(())
 }
