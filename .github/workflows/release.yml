@@ -48,6 +48,6 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
-          files: envfuse-${{ matrix.name }}.tar.gz
+          files: envseal-${{ matrix.name }}.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
