@@ -22,5 +22,6 @@ pub enum Commands {
     },
     Remove {
         key: String,
-    }
+    },
+    List,
 }

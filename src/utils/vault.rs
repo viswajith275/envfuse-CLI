@@ -1,6 +1,7 @@
 use super::crypto;
 use anyhow::{Ok, Result, anyhow};
 use base64::Engine;
+use clap::builder::Str;
 use directories::ProjectDirs;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -119,6 +120,11 @@ impl Vault {
         } else {
             Err(anyhow!("no entry named '{name}'"))
         }    
+    }
+
+    pub fn list_all_keys(&self) -> Result<Vec<String>> {
+        let keys = self.entries.keys();
+        Ok(keys.cloned().collect())
     }
 }
 

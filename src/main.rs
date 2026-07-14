@@ -14,5 +14,6 @@ fn main() -> Result<()>{
         cli::Commands::Get { key } => commands::get::cmd_get(&key),
         cli::Commands::Load { keys } => commands::load::cmd_load(&keys),
         cli::Commands::Remove { key } => commands::remove::cmd_remove(&key),
+        cli::Commands::List => commands::list::cmd_list(),
 }
 }
