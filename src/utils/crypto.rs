@@ -32,10 +32,14 @@ pub fn encrypt(key: &[u8; KEY_LEN], plaintext: &str) -> Result<(Vec<u8>, Vec<u8>
 
     let mut nonce_bytes = [0u8; NONCE_LEN];
     OsRng.fill_bytes(&mut nonce_bytes);
-    let nonce = Nonce::from_slice(&nonce_bytes);
+    let nonce = Nonce::try_from(nonce_bytes);
+    let nonce = match nonce {
+        Ok(value) => value,
+        Err(_) => panic!("Error!"),
+    };
 
     let ciphertext = cipher
-        .encrypt(nonce, plaintext.as_bytes())
+        .encrypt(&nonce, plaintext.as_bytes())
         .map_err(|e| anyhow!("encryption failed: {e}"))?;
 
     Ok((nonce_bytes.to_vec(), ciphertext))
@@ -48,10 +52,13 @@ pub fn decrypt(key: &[u8; KEY_LEN], nonce_bytes: &[u8], ciphertext: &[u8]) -> Re
     if nonce_bytes.len() != NONCE_LEN {
         return Err(anyhow!("invalid nonce length: corrupted data"));
     }
-    let nonce = Nonce::from_slice(nonce_bytes);
-
+    let nonce = Nonce::try_from(nonce_bytes);
+    let nonce = match nonce {
+        Ok(value) => value,
+        Err(_) => panic!("Error!"),
+    };
     let plaintext = cipher
-        .decrypt(nonce, ciphertext)
+        .decrypt(&nonce, ciphertext)
         .map_err(|_| anyhow!("decryption failed: wrong password or corrupted data"))?;
 
     String::from_utf8(plaintext).map_err(|e| anyhow!("decrypted data was not valid utf8: {e}"))

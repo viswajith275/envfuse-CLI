@@ -4,21 +4,26 @@ use zeroize::Zeroize;
 
 use crate::utils::vault::Vault;
 
-pub fn cmd_run(args: Vec<String>) -> Result<()> {
+pub fn cmd_run(args: Vec<String>, group_name: &str) -> Result<()> {
 
     let (cmd_name, cmd_args) = args.split_first()
         .context("No command provided to run")?;
 
     let vault = Vault::load()?;
-    let password: String = rpassword::prompt_password("Enter Master Password: ")?;
+    let password: String = rpassword::prompt_password("Master Password: ")?;
     let derived = vault.unlock(&password)?;
 
     let mut child_cmd = Command::new(cmd_name);
     child_cmd.args(cmd_args);
 
-    for key in vault.list_all_keys().unwrap() {
+    let keys = vault.list_all_keys(group_name);
+    let keys = match keys {
+        Ok(value) => value,
+        Err(error) => panic!("{error}")
+    };
+    for key in  keys{
 
-        let value = vault.get_entry(&derived, &key);
+        let value = vault.get_entry(&derived, group_name, &key);
 
         let mut value = match value {
             Ok(value) => value,

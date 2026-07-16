@@ -20,7 +20,7 @@ struct Entry {
 pub struct Vault {
     salt: String,
     canary: Entry,
-    entries: HashMap<String, Entry>,
+    entries: HashMap<String, HashMap<String, Entry>>,
 }
 
 impl Vault {
@@ -57,7 +57,7 @@ impl Vault {
      pub fn load() -> Result<Self> {
 
         let path = Self::path()?;
-        let data = fs::read_to_string(&path).map_err(|_| anyhow!("no Seal found — run `envseal init` first"))?;
+        let data = fs::read_to_string(&path).map_err(|_| anyhow!("No Seal found — run `envseal init` first"))?;
         Ok(serde_json::from_str(&data)?)
 
     }
@@ -88,41 +88,56 @@ impl Vault {
         Ok(key)
     }
 
-     pub fn add_entry(&mut self, key: &[u8; crypto::KEY_LEN], name: &str, value: &str) -> Result<()> {
+     pub fn add_entry(&mut self, key: &[u8; crypto::KEY_LEN], group_name: &str, name: &str, value: &str) -> Result<()> {
 
         let (nonce, ciphertext) = crypto::encrypt(key, value)?;
-        self.entries.insert(
-            name.to_string(),
-            Entry {
+        self.entries.entry(
+            group_name.to_string()).or_default().insert(
+                name.to_string(), 
+                Entry {
                 nonce: b64_encode(&nonce),
                 ciphertext: b64_encode(&ciphertext),
-            },
-        );
+            });
         Ok(())
     }
  
-    pub fn get_entry(&self, key: &[u8; crypto::KEY_LEN], name: &str) -> Result<String> {
+    pub fn get_entry(&self, key: &[u8; crypto::KEY_LEN], group_name: &str, name: &str) -> Result<String> {
 
-        let entry = self.entries.get(name).ok_or_else(|| anyhow!("no entry named '{name}'"))?;
+        let group = self.entries.get(group_name).ok_or_else(|| anyhow!("no group named '{group_name}'"))?;
+        let entry = group.get(name).ok_or_else(|| anyhow!("no entry named '{name}' in group '{group_name}'"))?;
 
         let nonce = b64_decode(&entry.nonce)?;
         let ciphertext = b64_decode(&entry.ciphertext)?;
         crypto::decrypt(key, &nonce, &ciphertext)
     } 
 
-    pub fn remove_entry(&mut self, name: &str) -> Result<()> {
+    pub fn remove_entry(&mut self, group_name: &str, name: &str) -> Result<()> {
 
-        let removed = self.entries.remove(name);
+        let removed = self.entries.get_mut(group_name).ok_or_else(|| anyhow!("no group named '{group_name}'"))?;
+        let removed = removed.remove(name);
 
         if removed.is_some() {
             Ok(())
         } else {
-            Err(anyhow!("no entry named '{name}'"))
+            Err(anyhow!("no entry named '{name}' in group '{group_name}'"))
         }    
     }
 
-    pub fn list_all_keys(&self) -> Result<Vec<String>> {
-        let keys = self.entries.keys();
+    pub fn remove_group(&mut self, group_name: &str) -> Result<()> {
+
+        let removed = self.entries.remove(group_name);
+
+        if removed.is_some() {
+            Ok(())
+        }
+        else {
+            Err(anyhow!("no group named '{group_name}'"))
+        }
+    }
+
+    pub fn list_all_keys(&self, group_name: &str) -> Result<Vec<String>> {
+        let group = self.entries.get(group_name).ok_or_else(|| anyhow!("no group named '{group_name}'"))?;
+        let keys = group.keys();
         Ok(keys.cloned().collect())
     }
 }

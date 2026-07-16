@@ -1,29 +1,29 @@
-use crate::utils::vault::{Vault};
+use crate::utils::vault::Vault;
 use zeroize::Zeroizing;
 use rpassword::prompt_password;
 use anyhow::{Context, Result};
 
-pub fn cmd_load(keys: &[String], group_name: &str) -> Result<()> {
+pub fn cmd_export(keys: &[String], group_name: &str) -> Result<()> {
     let vault = Vault::load()?;
     let password = Zeroizing::new(prompt_password("Master Password: ")?);
     let derived = vault.unlock(&password)?;
     
     if !keys.is_empty(){
-        eprintln!("loading selected environment variables from {group_name}...");
+        eprintln!("selected environment variables from {group_name}...");
         for key in keys {
             let value = vault.get_entry(&derived, group_name,key).with_context(|| format!("failed to read '{key}'"))?;
-            println!("export {key}={value}");
+            println!("{key}={value}");
         }
     }
     else {
-        eprintln!("loading all environment variables from {group_name}...");
+        eprintln!("all environment variables from {group_name}...");
         let keys = match vault.list_all_keys(group_name) {
             Ok(value) => value,
             Err(_) => panic!("no group named {group_name}")
         };
         for key in keys {
             let value = vault.get_entry(&derived, group_name, &key).with_context(|| format!("failed to read '{key}'"))?;
-            println!("export {key}={value}");
+            println!("{key}={value}");
         }
     }
     Ok(())

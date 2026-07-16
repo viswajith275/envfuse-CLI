@@ -8,7 +8,8 @@ pub fn cmd_init() -> Result<()> {
         anyhow::bail!("vault already exists at {}", Vault::path()?.display());
     }
 
-    eprintln!("\n{}\n", r#" /$$$$$$$$                       /$$$$$$                      /$$
+    eprintln!("\n{}\n", r#"
+ /$$$$$$$$                       /$$$$$$                      /$$
 | $$_____/                      /$$__  $$                    | $$
 | $$       /$$$$$$$  /$$    /$$| $$  \__/  /$$$$$$   /$$$$$$ | $$
 | $$$$$   | $$__  $$|  $$  /$$/|  $$$$$$  /$$__  $$ |____  $$| $$
@@ -18,12 +19,12 @@ pub fn cmd_init() -> Result<()> {
 |________/|__/  |__/    \_/     \______/  \_______/ \_______/|__/
                                                                  
                                                                    "#
-            );
+    );
  
     let password = Zeroizing::new(prompt_password("Set a Master Password: ")?);
     let confirm = Zeroizing::new(prompt_password("Confirm Master Password: ")?);
     if *password != *confirm {
-        anyhow::bail!("passwords did not match");
+        anyhow::bail!("passwords did not match!");
     }
     
     Vault::init(&password)?;
