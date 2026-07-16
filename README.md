@@ -1,3 +1,4 @@
+```text
  /$$$$$$$$                       /$$$$$$                      /$$
 | $$_____/                      /$$__  $$                    | $$
 | $$       /$$$$$$$  /$$    /$$| $$  \__/  /$$$$$$   /$$$$$$ | $$
@@ -6,8 +7,7 @@
 | $$      | $$  | $$  \  $$$/   /$$  \ $$| $$_____/ /$$__  $$| $$
 | $$$$$$$$| $$  | $$   \  $/   |  $$$$$$/|  $$$$$$$|  $$$$$$$| $$
 |________/|__/  |__/    \_/     \______/  \_______/ \_______/|__/
-
-
+```
 A lightweight, encrypted command-line vault for securely managing API keys, secrets, and sensitive environment variables on your local machine. EnvSeal organizes your secrets into **groups** (like `dev`, `staging`, and `prod`) so you can seamlessly switch environments or inject secrets directly into application processes.
 
 **Version:** see [Releases](https://www.google.com/search?q=https://github.com/viswajith275/EnvSeal-CLI/releases) for the current version and changelog.
