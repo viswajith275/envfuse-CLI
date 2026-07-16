@@ -1,8 +1,12 @@
-Here is the updated `README.md` rewritten to match the new group-based architecture and commands of your CLI.
+ /$$$$$$$$                       /$$$$$$                      /$$
+| $$_____/                      /$$__  $$                    | $$
+| $$       /$$$$$$$  /$$    /$$| $$  \__/  /$$$$$$   /$$$$$$ | $$
+| $$$$$   | $$__  $$|  $$  /$$/|  $$$$$$  /$$__  $$ |____  $$| $$
+| $$__/   | $$  \ $$ \  $$/$$/  \____  $$| $$$$$$$$  /$$$$$$$| $$
+| $$      | $$  | $$  \  $$$/   /$$  \ $$| $$_____/ /$$__  $$| $$
+| $$$$$$$$| $$  | $$   \  $/   |  $$$$$$/|  $$$$$$$|  $$$$$$$| $$
+|________/|__/  |__/    \_/     \______/  \_______/ \_______/|__/
 
----
-
-# EnvSeal-CLI
 
 A lightweight, encrypted command-line vault for securely managing API keys, secrets, and sensitive environment variables on your local machine. EnvSeal organizes your secrets into **groups** (like `dev`, `staging`, and `prod`) so you can seamlessly switch environments or inject secrets directly into application processes.
 
