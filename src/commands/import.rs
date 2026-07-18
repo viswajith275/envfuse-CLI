@@ -5,7 +5,7 @@ use rpassword::prompt_password;
 use std::path::Path;
 use zeroize::Zeroizing;
 
-pub fn cmd_import(group_name: &str, path: &str) -> Result<()> {
+pub fn cmd_import(group: &Option<String>, tag: &Option<String>, path: &str) -> Result<()> {
     let mut vault = Vault::load()?;
     let password = Zeroizing::new(prompt_password("Master Password: ")?);
     let derived = vault.unlock(&password)?;

@@ -4,7 +4,7 @@ use zeroize::Zeroize;
 
 use crate::utils::vault::Vault;
 
-pub fn cmd_run(args: Vec<String>, group_name: &str) -> Result<()> {
+pub fn cmd_run(group: &Option<String>, tag: &Option<String>, args: &Vec<String>) -> Result<()> {
     let (cmd_name, cmd_args) = args.split_first().context("No command provided to run")?;
 
     let vault = Vault::load()?;

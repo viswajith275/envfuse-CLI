@@ -10,41 +10,23 @@ fn main() -> Result<()> {
 
     match clis.command {
         cli::Commands::Init => commands::init::cmd_init(),
-        cli::Commands::Set {
-            group_name,
-            tag,
-            key,
-        } => commands::set::cmd_set(&key, &group_name),
-        cli::Commands::Get {
-            group_name,
-            tag,
-            key,
-        } => commands::get::cmd_get(&key, &group_name),
-        cli::Commands::Load {
-            group_name,
-            tag,
-            keys,
-        } => commands::load::cmd_load(&keys, &group_name),
-        cli::Commands::Remove {
-            group_name,
-            tag,
-            key,
-        } => commands::remove::cmd_remove(&key, &group_name),
-        cli::Commands::List { group_name, tag } => commands::list::cmd_list(&group_name),
+        cli::Commands::Set { group, tag, key } => commands::set::cmd_set(&group, &tag, &key),
+        cli::Commands::Get { group, tag, key } => commands::get::cmd_get(&group, &tag, &key),
+        cli::Commands::Load { group, tag, keys } => commands::load::cmd_load(&group, &tag, &keys),
+        cli::Commands::Remove { group, tag, key } => {
+            commands::remove::cmd_remove(&group, &tag, &key)
+        }
+        cli::Commands::List { group, tag } => commands::list::cmd_list(&group, &tag),
         cli::Commands::Run {
-            group_name,
+            group,
             tag,
             cmd_args,
-        } => commands::run::cmd_run(cmd_args, &group_name),
-        cli::Commands::Import {
-            group_name,
-            tag,
-            path,
-        } => commands::import::cmd_import(&group_name, &path),
-        cli::Commands::Export {
-            group_name,
-            tag,
-            keys,
-        } => commands::export::cmd_export(&keys, &group_name),
+        } => commands::run::cmd_run(&group, &tag, &cmd_args),
+        cli::Commands::Import { group, tag, path } => {
+            commands::import::cmd_import(&group, &tag, &path)
+        }
+        cli::Commands::Export { group, tag, keys } => {
+            commands::export::cmd_export(&group, &tag, &keys)
+        }
     }
 }

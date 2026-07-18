@@ -4,7 +4,11 @@ use dialoguer::Confirm;
 use rpassword::prompt_password;
 use zeroize::Zeroizing;
 
-pub fn cmd_remove(key: &Option<String>, group_name: &str) -> Result<()> {
+pub fn cmd_remove(
+    group: &Option<String>,
+    tag: &Option<String>,
+    key: &Option<String>,
+) -> Result<()> {
     let mut vault = Vault::load()?;
     let password = Zeroizing::new(prompt_password("Master Password: ")?);
     let _ = vault.unlock(&password)?;

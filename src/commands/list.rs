@@ -1,7 +1,7 @@
 use crate::utils::vault::Vault;
 use anyhow::Result;
 
-pub fn cmd_list(group_name: &str) -> Result<()> {
+pub fn cmd_list(group: &Option<String>, tag: &Option<String>) -> Result<()> {
     let vault = Vault::load()?;
 
     let keys = vault.list_all_keys(group_name);
