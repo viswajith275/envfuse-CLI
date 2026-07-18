@@ -1,4 +1,4 @@
-**🔐 MASTER BRANCH**
+** MASTER BRANCH**
 
 ```text
  /$$$$$$$$                       /$$$$$$                      /$$
@@ -11,7 +11,7 @@
 |________/|__/  |__/    \_/     \______/  \_______/ \_______/|__/
 ```
 
-🚀 **EnvSeal**: Your Encrypted Personal Vault for Secrets
+ **EnvSeal**: Your Encrypted Personal Vault for Secrets
 
 A lightweight, encrypted command-line vault for securely managing API keys, secrets, and sensitive environment variables on your local machine. EnvSeal organizes your secrets into **groups** (like `dev`, `staging`, `prod`) and keeps them under military-grade encryption. No more scattered `.env` files or accidental commits of sensitive data!
 
@@ -34,16 +34,15 @@ A lightweight, encrypted command-line vault for securely managing API keys, secr
   * [Server Deployment](#server-deployment)
 * [Security Details](#security-details)
 * [Best Practices](#best-practices)
-* [Upcoming Features](#upcoming-features)
 * [Troubleshooting](#troubleshooting)
 * [Contributing](#contributing)
 * [License](#license)
 
 ---
 
-## 🎨 Why EnvSeal?
+## Why EnvSeal?
 
-Imagine juggling multiple `.env` files across different projects, environments, and machines. You switch between local development, staging, and production—each with different API keys, database URLs, and credentials. One wrong copy-paste, and you've exposed production secrets to your dev environment. 😱
+Imagine juggling multiple `.env` files across different projects, environments, and machines. You switch between local development, staging, and production—each with different API keys, database URLs, and credentials. One wrong copy-paste, and you've exposed production secrets to your dev environment.
 
 **EnvSeal eliminates this chaos** by:
 - 🔒 **Centralizing** all your secrets in one encrypted vault
@@ -55,7 +54,7 @@ Imagine juggling multiple `.env` files across different projects, environments, 
 
 ---
 
-## 🚨 Problem and Solution
+## Problem and Solution
 
 ### The Problem
 
@@ -87,7 +86,7 @@ Developers often struggle with securely managing API keys, tokens, and sensitive
 
 ---
 
-## 🌟 Key Features
+## Key Features
 
 | Feature | Description |
 |---------|-------------|
@@ -99,13 +98,13 @@ Developers often struggle with securely managing API keys, tokens, and sensitive
 | **💾 Persistent Vault** | Encrypted vault stored locally in your OS config directory |
 | **🧹 Memory Safety** | Automatic memory wiping prevents sensitive data leaks |
 | **🔄 Cross-Platform** | Linux, macOS (Intel & Apple Silicon), bash/zsh/fish |
-| **📝 Directory Linking** (Upcoming) | Bind a group to a directory—no need to specify group name repeatedly |
-| **🏷️ Dynamic Tags** (Upcoming) | Create dev/prod tags to swap variables on the fly |
+| **📝 Directory Linking** | Bind a group to a directory—no need to specify group name repeatedly |
+| **🏷️ Dynamic Tags** | Create dev/prod tags to swap variables on the fly |
 | **💨 Zero-Overhead** | Written in Rust for speed and safety |
 
 ---
 
-## 🏗️ Architecture & Security
+## Architecture & Security
 
 ### Encryption Pipeline
 
@@ -136,7 +135,7 @@ EnvSeal uses the Rust `zeroize` crate to:
 
 ---
 
-## 📦 Installation
+## Installation
 
 Choose your preferred installation method.
 
@@ -231,7 +230,7 @@ mv envseal ~/.local/bin/
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Step 1️⃣: Initialize Your Vault
 
@@ -302,7 +301,7 @@ envseal run --group dev npm start
 
 ---
 
-## 📚 Commands Reference
+## Commands Reference
 
 ### `envseal init`
 
@@ -487,22 +486,46 @@ envseal remove --group dev
 
 ---
 
-### `envseal link <GROUP>` (Upcoming)
+### `envseal link <GROUP>`  Directory Linking 
 
-Bind a specific group to your current working directory. Once linked, commands run in that folder automatically use the linked group.
+Bind a specific group to your current working directory. Once linked, you can run commands in that folder without needing to repeatedly type or remember the group name.
 
 ```bash
-# In your project directory, link to 'myapp' group
-envseal link myapp
+# In your project directory, link to 'frontend' group
+cd ~/projects/my-app
+envseal link frontend
 
-# Now any `envseal run` command in this directory uses 'myapp' by default
-cd /path/to/project
-envseal run npm start  # Uses 'myapp' group automatically
+# Now any command in this directory uses 'frontend' by default
+envseal run npm start  # Uses 'frontend' group automatically
+
+# Switch to staging
+envseal link staging
+envseal run npm start  # Uses 'staging' group automatically
 ```
+
+**Use case:** Multi-service projects where each service needs different secrets.
+
+### Tags
+
+Change crucial variables on the fly. Create local and prod tags to swap out specific values—like localhost vs. a production DB—while the rest of your group settings stay the same.
+
+```bash
+# Create a group with dev tag
+envseal set --group myapp --tag dev DATABASE_URL postgresql://localhost/db
+
+# Same group, prod tag
+envseal set --group myapp --tag prod DATABASE_URL postgresql://prod-db.example.com/db
+
+# Run with specific tag
+envseal run --group myapp --tag dev npm start
+envseal run --group myapp --tag prod npm start
+```
+
+**Use case:** Quickly toggle between local and cloud databases without maintaining separate groups.
 
 ---
 
-## 💻 Usage Scenarios
+## Usage Scenarios
 
 ### Local Development Across Environments
 
@@ -607,7 +630,7 @@ envseal run --group prod systemctl restart myapp
 
 ---
 
-## 🔒 Security Details
+## Security Details
 
 ### Encryption Specification
 
@@ -651,7 +674,7 @@ Used for AES-256-GCM encryption
 
 ---
 
-## 🛡️ Best Practices
+## Best Practices
 
 ### ✅ DO
 
@@ -689,7 +712,7 @@ Used for AES-256-GCM encryption
    envseal export --group dev | head  # Spot check
    ```
 
-### ❌ DON'T
+### DON'T
 
 1. **Avoid loading secrets into shell permanently**
    ```bash
@@ -722,50 +745,10 @@ Used for AES-256-GCM encryption
    envseal get --group dev API_KEY  # Verify key exists
    ```
 
----
-
-## 🎁 Upcoming Features
-
-### Dynamic Tags 🏷️
-
-Change crucial variables on the fly. Create local and prod tags to swap out specific values—like localhost vs. a production DB—while the rest of your group settings stay the same.
-
-```bash
-# Create a group with dev tag
-envseal set --group myapp --tag dev DATABASE_URL postgresql://localhost/db
-
-# Same group, prod tag
-envseal set --group myapp --tag prod DATABASE_URL postgresql://prod-db.example.com/db
-
-# Run with specific tag
-envseal run --group myapp --tag dev npm start
-envseal run --group myapp --tag prod npm start
-```
-
-**Use case:** Quickly toggle between local and cloud databases without maintaining separate groups.
-
-### Directory Linking 📁
-
-Bind a specific group to your current working directory. Once linked, you can run commands in that folder without needing to repeatedly type or remember the group name.
-
-```bash
-# In your project directory, link to 'frontend' group
-cd ~/projects/my-app
-envseal link frontend
-
-# Now any command in this directory uses 'frontend' by default
-envseal run npm start  # Uses 'frontend' group automatically
-
-# Switch to staging
-envseal link staging
-envseal run npm start  # Uses 'staging' group automatically
-```
-
-**Use case:** Multi-service projects where each service needs different secrets.
 
 ---
 
-## 🐛 Troubleshooting
+##  Troubleshooting
 
 ### "Vault not found" Error
 
@@ -873,7 +856,7 @@ bash scripts/install.sh
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! We're looking for:
 - Bug fixes and error handling improvements
@@ -916,7 +899,7 @@ cargo clippy     # Lint checks
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the **MIT License** — see the [LICENSE](./LICENSE) file for details.
 
@@ -924,7 +907,7 @@ This project is licensed under the **MIT License** — see the [LICENSE](./LICEN
 
 ---
 
-## 🙋 Support & Questions
+## Support & Questions
 
 - 📖 Check the [Troubleshooting](#troubleshooting) section
 - 🐛 [Open an issue](https://github.com/viswajith275/EnvSeal-CLI/issues) on GitHub
@@ -936,7 +919,7 @@ This project is licensed under the **MIT License** — see the [LICENSE](./LICEN
 
 ---
 
-## 🏆 What Makes EnvSeal Different?
+## What Makes EnvSeal Different?
 
 | Feature | EnvSeal | `.env` files | 1Password | AWS Secrets Manager |
 |---------|---------|-------------|-----------|------------------|
