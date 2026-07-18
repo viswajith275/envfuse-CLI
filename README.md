@@ -10,7 +10,7 @@
 | $$$$$$$$| $$  | $$   \  $/   |  $$$$$$/|  $$$$$$$|  $$$$$$$| $$
 |________/|__/  |__/    \_/     \______/  \_______/ \_______/|__/
 ```
-A lightweight, encrypted command-line vault for securely managing API keys, secrets, and sensitive environment variables on your local machine. EnvSeal organizes your secrets into **groups** (like `dev`, `staging`, and `prod`) so you can seamlessly switch environments or inject secrets directly into application processes.
+A lightweight, encrypted command-line vault for securely managing API keys, secrets, and sensitive environment variables on your local machine. EnvSeal organizes your secrets into **groups** (like dev, staging, and prod) so you can seamlessly switch environments or inject secrets directly into application processes.
 
 **Version:** see [Releases](https://github.com/viswajith275/EnvSeal-CLI/releases) for the current version and changelog.
 
@@ -27,14 +27,13 @@ A lightweight, encrypted command-line vault for securely managing API keys, secr
 * [Contributing](#contributing)
 * [License](#license)
 
-
 ---
 
 ## Upcoming Features
 
-* **Dynamic Tags**: Change crucial variables on the fly. Create local and prod tags to swap out specific values—like localhost vs. a production DB—while the rest of your group settings stay exactly the same.
+* **Dynamic Tags**: Change crucial variables on the fly. Create local and prod tags to swap out specific values—like localhost vs. a production DB—while the rest of your group settings stay expected.
 
-* **Directory Linking**: Bind a specific group to your current working directory. Once linked, you can run commands in that folder without needing to repeatedly type or remember the group name. (Global access via the group name will still work from any other directory).
+* **Directory Linking**: Bind a specific group to your current working directory. Once linked, you can run commands in that folder without needing to repeatedly type or remember the group name.
 
 ---
 
@@ -84,14 +83,30 @@ Choose your preferred installation method.
 
 ### Method 1: Automated Installation (Recommended)
 
-Download and run the installation script. This always fetches the install script attached to the *latest* GitHub release.
+Download and run the installation script. The installer auto-detects your OS and architecture, installs the matching binary, and attempts to set up automatic shell integration for `envseal load`.
+
+Note: the installer lives in `scripts/install.sh` in this repository. On the `beta` branch you can run:
 
 ```bash
-curl -sSfL https://raw.githubusercontent.com/viswajith275/envseal-cli/master/install.sh | bash
-
+curl -sSfL https://raw.githubusercontent.com/viswajith275/EnvSeal-CLI/beta/scripts/install.sh | bash
 ```
 
-The installer will auto-detect your OS and architecture, download the matching binary, add it to your PATH, and set up automatic shell integration for `envseal load`.
+The installer supports these options:
+
+* `--version <tag>` (or `-v`): Install a specific release tag (example: `v1.2.3`). Defaults to the latest release.
+* `--file <path>` (or `-f`): Install from a local tarball or binary.
+* `--dir <path>` (or `-d`): Custom install directory (default: `~/.local/bin`).
+* `--dry-run`: Show what would be done without making changes.
+
+The installer will:
+
+* Detect your OS/arch and fetch the appropriate binary from the repository releases.
+* Copy the binary to your install directory and make it executable.
+* Attempt to add the install directory to your PATH in your shell config.
+* Install a small shell wrapper so `envseal load` can be evaluated in your current shell.
+* Verify the installed binary and print next steps.
+
+If you prefer, you can install from the packaged release assets instead of using the script (see Releases for binaries per platform).
 
 ### Method 2: Build from Source
 
@@ -118,7 +133,6 @@ Run the initialization command and set a strong master password:
 
 ```bash
 envseal init
-
 ```
 
 ### 2. Store Secrets in a Group
@@ -128,7 +142,6 @@ Store your development secrets in a group named `dev` (the group is created auto
 ```bash
 envseal set dev DATABASE_URL
 # Prompts for master password and the secret value
-
 ```
 
 ### 3. Import an Existing `.env` File
@@ -137,7 +150,6 @@ Migrate a plain-text `.env` file into an encrypted group named `prod`:
 
 ```bash
 envseal import prod .env.production
-
 ```
 
 ### 4. Run an Application Safely
@@ -146,7 +158,6 @@ Inject your group's secrets directly into a process without leaking them to the 
 
 ```bash
 envseal run dev npm start
-
 ```
 
 *(This is the recommended workflow. It prompts for your master password once, decrypts the variables, and executes `npm start` with those variables injected.)*
@@ -168,7 +179,6 @@ Set or update a value for a given key in a group. If the group doesn't exist, it
 
 ```bash
 envseal set dev GITHUB_TOKEN
-
 ```
 
 ### `envseal get <GROUP_NAME> <KEY>`
@@ -177,7 +187,6 @@ Retrieve a stored secret from a specific group.
 
 ```bash
 envseal get dev GITHUB_TOKEN
-
 ```
 
 ### `envseal import <GROUP_NAME> <PATH_OF_.ENV>`
@@ -186,7 +195,6 @@ Reads a `.env` file and securely loads all key-value pairs into the specified va
 
 ```bash
 envseal import staging /path/to/staging.env
-
 ```
 
 ### `envseal export <GROUP_NAME> > .env`
@@ -195,7 +203,6 @@ Decrypts and outputs the entire group in standard `.env` format. You can pipe th
 
 ```bash
 envseal export prod > .env.production
-
 ```
 
 ### `envseal run <GROUP_NAME> <COMMAND>`
@@ -204,7 +211,6 @@ envseal export prod > .env.production
 
 ```bash
 envseal run dev python app.py
-
 ```
 
 ### `envseal load <GROUP_NAME> [KEYS...]`
@@ -214,11 +220,10 @@ Loads the specified keys (or the entire group if keys are omitted) into the curr
 
 ```bash
 # Loads the entire group into current shell (if shell integration is installed)
-envseal load dev
+eval "$(envseal load dev)"
 
 # Loads specific keys
 envseal load dev DATABASE_URL API_KEY
-
 ```
 
 ### `envseal list <GROUP_NAME>`
@@ -227,7 +232,6 @@ List all keys currently stored inside a specific group.
 
 ```bash
 envseal list dev
-
 ```
 
 ### `envseal remove <GROUP_NAME> [KEY]`
@@ -240,7 +244,6 @@ envseal remove dev OLD_API_KEY
 
 # Delete the entire dev group
 envseal remove dev
-
 ```
 
 ---
@@ -256,7 +259,7 @@ envseal remove dev
 
 ### Best Practices
 
-* **Prefer `envseal run**`: Injecting secrets directly into child processes using `run` is significantly safer than using `load`, which leaves credentials hanging in your active terminal session.
+* **Prefer `envseal run`**: Injecting secrets directly into child processes using `run` is significantly safer than using `load`, which leaves credentials hanging in your active terminal session.
 * **Protect the Vault**: While the vault is encrypted, ensure your machine utilizes full-disk encryption and proper file permissions.
 
 ---
@@ -278,7 +281,6 @@ envseal run dev npm start
 
 # Test against staging database
 envseal run staging npm start
-
 ```
 
 ### CI/CD Pipeline Local Testing
@@ -287,7 +289,6 @@ Test your deployment scripts locally without hardcoding secrets:
 
 ```bash
 envseal run deploy ./scripts/deploy_to_aws.sh
-
 ```
 
 ---
@@ -311,7 +312,6 @@ envseal run deploy ./scripts/deploy_to_aws.sh
 
 ```bash
 eval "$(envseal load dev)"
-
 ```
 
 Alternatively, switch to using `envseal run dev <command>`.
@@ -337,7 +337,6 @@ cargo build
 cargo test
 cargo fmt
 cargo clippy
-
 ```
 
 ---
